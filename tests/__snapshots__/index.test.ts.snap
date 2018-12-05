@@ -886,6 +886,8 @@ MyComponent.propTypes = {
 export default MyComponent;"
 `;
 
+exports[`babel-plugin-typescript-to-proptypes transforms ./fixtures/imported-type.ts 1`] = `"export type MyType = string | null;"`;
+
 exports[`babel-plugin-typescript-to-proptypes transforms ./fixtures/multiple-components.ts 1`] = `
 "import _pt from 'prop-types';
 import React from 'react';
@@ -1215,6 +1217,28 @@ export default class TypeFunction extends React.Component<Props> {
     args: _pt.func.isRequired,
     parens: _pt.func,
     handler: _pt.func.isRequired,
+    children: _pt.node
+  };
+
+  render() {
+    return null;
+  }
+
+}"
+`;
+
+exports[`babel-plugin-typescript-to-proptypes transforms ./fixtures/type-imported.ts 1`] = `
+"import _pt from 'prop-types';
+import React from \\"react\\";
+import { MyType } from \\"./imported-type\\";
+export interface Props {
+  myType: MyType;
+  myTypeUnion: string | MyType;
+}
+export default class ImportedType extends React.Component<Props> {
+  static propTypes = {
+    myType: _pt.any,
+    myTypeUnion: _pt.any,
     children: _pt.node
   };
 

@@ -21,6 +21,15 @@ const NATIVE_BUILT_INS = [
   "Promise",
 ];
 
+function isAnyPropType(propType: PropType | null): boolean {
+  return (
+    !!propType &&
+    t.isMemberExpression(propType) &&
+    propType.property &&
+    (propType.property as any).name === "any"
+  );
+}
+
 function convert(
   type: any,
   state: ConvertState,
@@ -237,6 +246,12 @@ function convert(
     } else {
       args = convertArray(type.types, state, depth);
       label = t.identifier("oneOfType");
+
+      // If the union would include an any proptype
+      if (args.some(subPropType => isAnyPropType(subPropType))) {
+        // Then we might as well just return the any proptype directly
+        return createMember(t.identifier("any"), propTypesImportedName);
+      }
     }
 
     if (label && args.length > 0) {
@@ -358,9 +373,7 @@ function convertListToProps(
             property.optional ||
               // Any PropTypes (eg. from imported types) can't be
               // required, because they may be null or undefined.
-              (t.isMemberExpression(propType) &&
-                propType.property &&
-                (propType.property as any).name === "any") ||
+              isAnyPropType(propType) ||
               // If the value can be null or undefined, then it can't be required
               (t.isTSUnionType(type) &&
                 type.types.some(
