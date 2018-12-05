@@ -21,5 +21,6 @@ export default function extractGenericTypeNames(node: any): string[] {
     });
   }
 
-  return names;
+  // Ensure that names are unique
+  return Array.from(new Set(names));
 }

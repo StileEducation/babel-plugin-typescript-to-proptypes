@@ -349,7 +349,7 @@ function convertListToProps(
   defaultProps: string[],
   depth: number,
 ): t.ObjectProperty[] {
-  const propTypes: t.ObjectProperty[] = [];
+  const propTypesByName: { [name: string]: t.ObjectProperty[] } = {};
 
   properties.forEach(property => {
     if (!property.typeAnnotation) {
@@ -365,7 +365,11 @@ function convertListToProps(
     const propType = convert(type, state, depth);
 
     if (propType) {
-      propTypes.push(
+      // Ensure that an array is defined
+      propTypesByName[(property.key as t.Identifier).name] =
+        propTypesByName[(property.key as t.Identifier).name] || [];
+
+      propTypesByName[(property.key as t.Identifier).name].push(
         t.objectProperty(
           property.key,
           wrapIsRequired(
@@ -389,7 +393,31 @@ function convertListToProps(
     }
   });
 
-  return propTypes;
+  return Object.values(propTypesByName).map(propTypes => {
+    if (propTypes.length > 1) {
+      // If all of the possible types are required, then the property is required
+      const isRequired = propTypes.every(
+        pt =>
+          t.isMemberExpression(pt.value) &&
+          pt.value.property &&
+          (pt.value.property as any).name === "isRequired",
+      );
+
+      return t.objectProperty(
+        propTypes[0].key,
+        wrapIsRequired(
+          createCall(
+            t.identifier("oneOfType"),
+            [t.arrayExpression(propTypes.map(pt => pt.value))],
+            state.propTypes.defaultImport,
+          ),
+          !isRequired,
+        ),
+      );
+    }
+
+    return propTypes[0];
+  });
 }
 
 export default function convertToPropTypes(

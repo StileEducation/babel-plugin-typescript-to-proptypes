@@ -888,6 +888,33 @@ export default MyComponent;"
 
 exports[`babel-plugin-typescript-to-proptypes transforms ./fixtures/imported-type.ts 1`] = `"export type MyType = string | null;"`;
 
+exports[`babel-plugin-typescript-to-proptypes transforms ./fixtures/interface-union.ts 1`] = `
+"import _pt from 'prop-types';
+import React from \\"react\\";
+interface MyType1 {
+  foo: \\"foo1\\";
+  bar: \\"bar\\";
+}
+interface MyType2 {
+  foo: \\"foo2\\";
+  baz: \\"baz\\";
+}
+type Props = MyType1 | MyType2;
+export default class InterfaceUnion extends React.Component<Props> {
+  static propTypes = {
+    foo: _pt.oneOfType([_pt.oneOf([\\"foo1\\"]).isRequired, _pt.oneOf([\\"foo2\\"]).isRequired]).isRequired,
+    bar: _pt.oneOf([\\"bar\\"]).isRequired,
+    baz: _pt.oneOf([\\"baz\\"]).isRequired,
+    children: _pt.node
+  };
+
+  render() {
+    return null;
+  }
+
+}"
+`;
+
 exports[`babel-plugin-typescript-to-proptypes transforms ./fixtures/multiple-components.ts 1`] = `
 "import _pt from 'prop-types';
 import React from 'react';
