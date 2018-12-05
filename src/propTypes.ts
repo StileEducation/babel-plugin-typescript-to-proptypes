@@ -1,16 +1,32 @@
-import { types as t } from '@babel/core';
-import { ConvertState, PropType } from './types';
+import { types as t } from "@babel/core";
+import { ConvertState, PropType } from "./types";
 
-export function hasCustomPropTypeSuffix(name: string, suffixes?: string[]): boolean {
+export function hasCustomPropTypeSuffix(
+  name: string,
+  suffixes?: string[],
+): boolean {
   return !!suffixes && suffixes.some(suffix => name.endsWith(suffix));
 }
 
-export function isReactTypeMatch(name: string, type: string, reactImportedName: string): boolean {
-  return name === type || name === `React.${type}` || name === `${reactImportedName}.${type}`;
+export function isReactTypeMatch(
+  name: string,
+  type: string,
+  reactImportedName: string,
+): boolean {
+  return (
+    name === type ||
+    name === `React.${type}` ||
+    name === `${reactImportedName}.${type}`
+  );
 }
 
-export function wrapIsRequired(propType: PropType, optional?: boolean | null): PropType {
-  return optional ? propType : t.memberExpression(propType, t.identifier('isRequired'));
+export function wrapIsRequired(
+  propType: PropType,
+  optional?: boolean | null,
+): PropType {
+  return optional
+    ? propType
+    : t.memberExpression(propType, t.identifier("isRequired"));
 }
 
 export function createMember(
@@ -36,7 +52,9 @@ export function createPropTypesObject(
 
   // Wrap with forbid
   return state.options.forbidExtraProps
-    ? t.callExpression(t.identifier(state.airbnbPropTypes.forbidImport), [object])
+    ? t.callExpression(t.identifier(state.airbnbPropTypes.forbidImport), [
+        object,
+      ])
     : object;
 }
 
@@ -47,7 +65,7 @@ export function mergePropTypes(
   wrapForbid: boolean = true,
 ): t.CallExpression | t.ObjectExpression {
   if (t.isCallExpression(expr)) {
-    if (t.isIdentifier(expr.callee, { name: 'forbidExtraProps' })) {
+    if (t.isIdentifier(expr.callee, { name: "forbidExtraProps" })) {
       expr.arguments.forEach((arg, index) => {
         expr.arguments[index] = mergePropTypes(arg, propTypes, state, false);
       });
@@ -79,7 +97,9 @@ export function mergePropTypes(
 
   // Wrap with forbid
   if (wrapForbid && state.options.forbidExtraProps) {
-    return t.callExpression(t.identifier(state.airbnbPropTypes.forbidImport), [expr]);
+    return t.callExpression(t.identifier(state.airbnbPropTypes.forbidImport), [
+      expr,
+    ]);
   }
 
   return expr;

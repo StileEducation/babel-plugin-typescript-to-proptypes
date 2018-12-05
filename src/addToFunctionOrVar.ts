@@ -1,10 +1,12 @@
-import { types as t } from '@babel/core';
-import convertToPropTypes from './convertBabelToPropTypes';
-import extractGenericTypeNames from './extractGenericTypeNames';
-import { createPropTypesObject, mergePropTypes } from './propTypes';
-import { Path, ConvertState } from './types';
+import { types as t } from "@babel/core";
+import convertToPropTypes from "./convertBabelToPropTypes";
+import extractGenericTypeNames from "./extractGenericTypeNames";
+import { createPropTypesObject, mergePropTypes } from "./propTypes";
+import { Path, ConvertState } from "./types";
 
-function extractTypeNames(path: Path<t.FunctionDeclaration | t.VariableDeclaration>): string[] {
+function extractTypeNames(
+  path: Path<t.FunctionDeclaration | t.VariableDeclaration>,
+): string[] {
   if (t.isFunctionDeclaration(path.node)) {
     return extractGenericTypeNames(
       // @ts-ignore
@@ -15,7 +17,8 @@ function extractTypeNames(path: Path<t.FunctionDeclaration | t.VariableDeclarati
   if (t.isVariableDeclaration(path.node)) {
     return extractGenericTypeNames(
       // @ts-ignore
-      path.node.declarations[0].id.typeAnnotation.typeAnnotation.typeParameters.params[0],
+      path.node.declarations[0].id.typeAnnotation.typeAnnotation.typeParameters
+        .params[0],
     );
   }
 
@@ -32,10 +35,12 @@ function findStaticProperty(
     .find(
       sibPath =>
         t.isExpressionStatement(sibPath.node) &&
-        t.isAssignmentExpression(sibPath.node.expression, { operator: '=' }) &&
+        t.isAssignmentExpression(sibPath.node.expression, { operator: "=" }) &&
         t.isMemberExpression(sibPath.node.expression.left) &&
         t.isObjectExpression(sibPath.node.expression.right) &&
-        t.isIdentifier(sibPath.node.expression.left.object, { name: funcName }) &&
+        t.isIdentifier(sibPath.node.expression.left.object, {
+          name: funcName,
+        }) &&
         t.isIdentifier(sibPath.node.expression.left.property, { name }),
     );
 
@@ -49,10 +54,11 @@ export default function addToFunctionOrVar(
   state: ConvertState,
 ) {
   const rootPath =
-    t.isExportNamedDeclaration(path.parent) || t.isExportDefaultDeclaration(path.parent)
+    t.isExportNamedDeclaration(path.parent) ||
+    t.isExportDefaultDeclaration(path.parent)
       ? path.parentPath
       : path;
-  const defaultProps = findStaticProperty(rootPath, name, 'defaultProps');
+  const defaultProps = findStaticProperty(rootPath, name, "defaultProps");
   const defaultPropsKeyList: string[] = [];
 
   if (
@@ -79,7 +85,7 @@ export default function addToFunctionOrVar(
     return;
   }
 
-  const propTypes = findStaticProperty(rootPath, name, 'propTypes');
+  const propTypes = findStaticProperty(rootPath, name, "propTypes");
 
   if (propTypes) {
     propTypes.right = mergePropTypes(propTypes.right, propTypesList, state);
@@ -87,8 +93,8 @@ export default function addToFunctionOrVar(
     rootPath.insertAfter(
       t.expressionStatement(
         t.assignmentExpression(
-          '=',
-          t.memberExpression(t.identifier(name), t.identifier('propTypes')),
+          "=",
+          t.memberExpression(t.identifier(name), t.identifier("propTypes")),
           createPropTypesObject(propTypesList, state),
         ),
       ),

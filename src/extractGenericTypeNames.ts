@@ -1,5 +1,5 @@
-import { types as t } from '@babel/core';
-import getTypeName from './getTypeName';
+import { types as t } from "@babel/core";
+import getTypeName from "./getTypeName";
 
 export default function extractGenericTypeNames(node: any): string[] {
   const names: string[] = [];

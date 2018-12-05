@@ -1,18 +1,18 @@
-import { declare } from '@babel/helper-plugin-utils';
-import { addDefault, addNamed } from '@babel/helper-module-imports';
-import syntaxTypeScript from '@babel/plugin-syntax-typescript';
-import { types as t } from '@babel/core';
-import addToClass from './addToClass';
-import addToFunctionOrVar from './addToFunctionOrVar';
-import extractTypeProperties from './extractTypeProperties';
+import { declare } from "@babel/helper-plugin-utils";
+import { addDefault, addNamed } from "@babel/helper-module-imports";
+import syntaxTypeScript from "@babel/plugin-syntax-typescript";
+import { types as t } from "@babel/core";
+import addToClass from "./addToClass";
+import addToFunctionOrVar from "./addToFunctionOrVar";
+import extractTypeProperties from "./extractTypeProperties";
 // import { loadProgram } from './typeChecker';
-import upsertImport from './upsertImport';
-import { Path, PluginOptions, ConvertState } from './types';
+import upsertImport from "./upsertImport";
+import { Path, PluginOptions, ConvertState } from "./types";
 
 const BABEL_VERSION = 7;
 
 function isNotTS(name: string): boolean {
-  return name.endsWith('.js') || name.endsWith('.jsx');
+  return name.endsWith(".js") || name.endsWith(".jsx");
 }
 
 export default declare((api: any, options: PluginOptions, root: string) => {
@@ -24,7 +24,7 @@ export default declare((api: any, options: PluginOptions, root: string) => {
     manipulateOptions(opts: any, parserOptions: any) {
       // Some codebases are only partially TypeScript, so we need to support
       // regular JS and JSX files, otherwise the Babel parser blows up.
-      parserOptions.plugins.push('jsx');
+      parserOptions.plugins.push("jsx");
     },
 
     post() {
@@ -37,19 +37,19 @@ export default declare((api: any, options: PluginOptions, root: string) => {
       (this as any).state = {
         airbnbPropTypes: {
           count: 0,
-          forbidImport: '',
+          forbidImport: "",
           hasImport: false,
           namedImports: [],
         },
         componentTypes: {},
-        filePath: '',
+        filePath: "",
         options,
         propTypes: {
           count: 0,
-          defaultImport: '',
+          defaultImport: "",
           hasImport: false,
         },
-        reactImportedName: '',
+        reactImportedName: "",
         referenceTypes: {},
       };
     },
@@ -76,26 +76,28 @@ export default declare((api: any, options: PluginOptions, root: string) => {
               return;
             }
 
-            if (node.source.value === 'prop-types') {
+            if (node.source.value === "prop-types") {
               const response = upsertImport(node, {
-                checkForDefault: 'PropTypes',
+                checkForDefault: "PropTypes",
               });
 
               state.propTypes.hasImport = true;
               state.propTypes.defaultImport = response.defaultImport;
             }
 
-            if (node.source.value === 'airbnb-prop-types') {
-              const response = upsertImport(node, { checkForNamed: 'forbidExtraProps' });
+            if (node.source.value === "airbnb-prop-types") {
+              const response = upsertImport(node, {
+                checkForNamed: "forbidExtraProps",
+              });
 
               state.airbnbPropTypes.hasImport = true;
               state.airbnbPropTypes.namedImports = response.namedImports;
               state.airbnbPropTypes.forbidImport = response.namedImport;
             }
 
-            if (node.source.value === 'react') {
+            if (node.source.value === "react") {
               const response = upsertImport(node, {
-                checkForDefault: 'React',
+                checkForDefault: "React",
               });
 
               state.reactImportedName = response.defaultImport;
@@ -106,9 +108,13 @@ export default declare((api: any, options: PluginOptions, root: string) => {
           // We need to do this without a visitor as we need to modify
           // the AST before anything else has can run.
           if (!state.propTypes.hasImport && state.reactImportedName) {
-            state.propTypes.defaultImport = addDefault(programPath, 'prop-types', {
-              nameHint: 'pt',
-            }).name;
+            state.propTypes.defaultImport = addDefault(
+              programPath,
+              "prop-types",
+              {
+                nameHint: "pt",
+              },
+            ).name;
           }
 
           if (
@@ -118,8 +124,8 @@ export default declare((api: any, options: PluginOptions, root: string) => {
           ) {
             state.airbnbPropTypes.forbidImport = addNamed(
               programPath,
-              'forbidExtraProps',
-              'airbnb-prop-types',
+              "forbidExtraProps",
+              "airbnb-prop-types",
             ).name;
 
             state.airbnbPropTypes.count += 1;
@@ -146,7 +152,9 @@ export default declare((api: any, options: PluginOptions, root: string) => {
 
             // `class Foo extends React.Component<Props> {}`
             // @ts-ignore
-            'ClassDeclaration|ClassExpression': (path: Path<t.ClassDeclaration>) => {
+            "ClassDeclaration|ClassExpression": (
+              path: Path<t.ClassDeclaration>,
+            ) => {
               const { node } = path;
               // prettier-ignore
               const valid = node.superTypeParameters && (
@@ -196,14 +204,21 @@ export default declare((api: any, options: PluginOptions, root: string) => {
             Identifier({ node }: Path<t.Identifier>) {
               const { namedImports } = state.airbnbPropTypes;
 
-              if (options.forbidExtraProps && namedImports.includes(node.name)) {
+              if (
+                options.forbidExtraProps &&
+                namedImports.includes(node.name)
+              ) {
                 state.airbnbPropTypes.count += 1;
               }
             },
 
             // PropTypes.*
             MemberExpression({ node }: Path<t.MemberExpression>) {
-              if (t.isIdentifier(node.object, { name: state.propTypes.defaultImport })) {
+              if (
+                t.isIdentifier(node.object, {
+                  name: state.propTypes.defaultImport,
+                })
+              ) {
                 state.propTypes.count += 1;
               }
             },
@@ -281,11 +296,11 @@ export default declare((api: any, options: PluginOptions, root: string) => {
 
           // Remove the `prop-types` import of no components exist,
           // and be sure not to remove pre-existing imports.
-          path.get('body').forEach(bodyPath => {
+          path.get("body").forEach(bodyPath => {
             if (
               state.propTypes.count === 0 &&
               t.isImportDeclaration(bodyPath.node) &&
-              bodyPath.node.source.value === 'prop-types'
+              bodyPath.node.source.value === "prop-types"
             ) {
               bodyPath.remove();
             }

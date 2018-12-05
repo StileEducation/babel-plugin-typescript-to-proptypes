@@ -1,5 +1,5 @@
-import { types as t } from '@babel/core';
-import { TypePropertyMap } from './types';
+import { types as t } from "@babel/core";
+import { TypePropertyMap } from "./types";
 
 export default function extractTypeProperties(
   node: any,

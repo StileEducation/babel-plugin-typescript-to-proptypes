@@ -1,4 +1,4 @@
-import { types as t } from '@babel/core';
+import { types as t } from "@babel/core";
 
 export default function getTypeName(typeName: t.TSEntityName): string {
   if (t.isIdentifier(typeName)) {
@@ -7,5 +7,5 @@ export default function getTypeName(typeName: t.TSEntityName): string {
     return `${getTypeName(typeName.left)}.${typeName.right.name}`;
   }
 
-  return '';
+  return "";
 }

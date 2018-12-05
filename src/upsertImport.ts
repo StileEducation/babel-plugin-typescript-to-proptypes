@@ -1,4 +1,4 @@
-import { types as t } from '@babel/core';
+import { types as t } from "@babel/core";
 
 type Response = {
   defaultImport: string;
@@ -17,8 +17,8 @@ export default function upsertImport(
 ): Response {
   const { checkForDefault, checkForNamed } = options;
   const response: Response = {
-    defaultImport: '',
-    namedImport: '',
+    defaultImport: "",
+    namedImport: "",
     namedImports: [],
   };
   let hasDefault = false;
@@ -26,7 +26,10 @@ export default function upsertImport(
 
   response.namedImports = imp.specifiers
     .filter(spec => {
-      if (t.isImportDefaultSpecifier(spec) || t.isImportNamespaceSpecifier(spec)) {
+      if (
+        t.isImportDefaultSpecifier(spec) ||
+        t.isImportNamespaceSpecifier(spec)
+      ) {
         response.defaultImport = spec.local.name;
         hasDefault = true;
 
@@ -48,14 +51,19 @@ export default function upsertImport(
 
   // Add default import if it doesn't exist
   if (checkForDefault && !hasDefault) {
-    imp.specifiers.unshift(t.importDefaultSpecifier(t.identifier(checkForDefault)));
+    imp.specifiers.unshift(
+      t.importDefaultSpecifier(t.identifier(checkForDefault)),
+    );
     response.defaultImport = checkForDefault;
   }
 
   // Add named import if it doesn't exist
   if (checkForNamed && !hasNamed) {
     imp.specifiers.push(
-      t.importSpecifier(t.identifier(checkForNamed), t.identifier(checkForNamed)),
+      t.importSpecifier(
+        t.identifier(checkForNamed),
+        t.identifier(checkForNamed),
+      ),
     );
     response.namedImport = checkForNamed;
   }

@@ -1,17 +1,21 @@
 /* eslint-disable no-bitwise */
 
-import { types as t } from '@babel/core';
-import ts from 'typescript';
+import { types as t } from "@babel/core";
+import ts from "typescript";
 import {
   createCall,
   createMember,
   hasCustomPropTypeSuffix,
   isReactTypeMatch,
   // wrapIsRequired,
-} from './propTypes';
-import { ConvertState, PropType } from './types';
+} from "./propTypes";
+import { ConvertState, PropType } from "./types";
 
-export function convert(type: ts.Type, state: ConvertState, depth: number): PropType | null {
+export function convert(
+  type: ts.Type,
+  state: ConvertState,
+  depth: number,
+): PropType | null {
   const { reactImportedName, propTypes } = state;
   const propTypesImportedName = propTypes.defaultImport;
   const isMaxDepth = depth >= (state.options.maxDepth || 3);
@@ -25,23 +29,23 @@ export function convert(type: ts.Type, state: ConvertState, depth: number): Prop
 
   // any -> PropTypes.any
   if (type.flags & ts.TypeFlags.Any) {
-    return createMember(t.identifier('any'), propTypesImportedName);
+    return createMember(t.identifier("any"), propTypesImportedName);
 
     // string -> PropTypes.string
   } else if (type.flags & ts.TypeFlags.StringLike) {
-    return createMember(t.identifier('string'), propTypesImportedName);
+    return createMember(t.identifier("string"), propTypesImportedName);
 
     // number -> PropTypes.number
   } else if (type.flags & ts.TypeFlags.NumberLike) {
-    return createMember(t.identifier('number'), propTypesImportedName);
+    return createMember(t.identifier("number"), propTypesImportedName);
 
     // boolean -> PropTypes.bool
   } else if (type.flags & ts.TypeFlags.BooleanLike) {
-    return createMember(t.identifier('bool'), propTypesImportedName);
+    return createMember(t.identifier("bool"), propTypesImportedName);
 
     // symbol -> PropTypes.symbol
   } else if (type.flags & ts.TypeFlags.ESSymbolLike) {
-    return createMember(t.identifier('symbol'), propTypesImportedName);
+    return createMember(t.identifier("symbol"), propTypesImportedName);
 
     // object -> PropTypes.object
   } else if (type.flags & ts.TypeFlags.Object) {
@@ -61,12 +65,12 @@ export function convert(type: ts.Type, state: ConvertState, depth: number): Prop
       // TODO
     }
 
-    return createMember(t.identifier('object'), propTypesImportedName);
+    return createMember(t.identifier("object"), propTypesImportedName);
 
     // (() => void) -> PropTypes.func
     // TODO
   } else if (type.flags & ts.TypeFlags.Any) {
-    return createMember(t.identifier('func'), propTypesImportedName);
+    return createMember(t.identifier("func"), propTypesImportedName);
 
     // React.ReactNode -> PropTypes.node
     // React.ReactElement -> PropTypes.element
@@ -78,53 +82,53 @@ export function convert(type: ts.Type, state: ConvertState, depth: number): Prop
     // Date, Error, RegExp -> Date, Error, RegExp
     // CustomType -> PropTypes.any
   } else if (t.isTSTypeReference(type)) {
-    const name = ''; // getTypeName(type.typeName);
+    const name = ""; // getTypeName(type.typeName);
 
     // node
     if (
-      isReactTypeMatch(name, 'ReactText', reactImportedName) ||
-      isReactTypeMatch(name, 'ReactNode', reactImportedName) ||
-      isReactTypeMatch(name, 'ReactType', reactImportedName)
+      isReactTypeMatch(name, "ReactText", reactImportedName) ||
+      isReactTypeMatch(name, "ReactNode", reactImportedName) ||
+      isReactTypeMatch(name, "ReactType", reactImportedName)
     ) {
-      return createMember(t.identifier('node'), propTypesImportedName);
+      return createMember(t.identifier("node"), propTypesImportedName);
 
       // function
     } else if (
-      isReactTypeMatch(name, 'ComponentType', reactImportedName) ||
-      isReactTypeMatch(name, 'ComponentClass', reactImportedName) ||
-      isReactTypeMatch(name, 'StatelessComponent', reactImportedName)
+      isReactTypeMatch(name, "ComponentType", reactImportedName) ||
+      isReactTypeMatch(name, "ComponentClass", reactImportedName) ||
+      isReactTypeMatch(name, "StatelessComponent", reactImportedName)
     ) {
-      return createMember(t.identifier('func'), propTypesImportedName);
+      return createMember(t.identifier("func"), propTypesImportedName);
 
       // element
     } else if (
-      isReactTypeMatch(name, 'Element', 'JSX') ||
-      isReactTypeMatch(name, 'ReactElement', reactImportedName) ||
-      isReactTypeMatch(name, 'SFCElement', reactImportedName)
+      isReactTypeMatch(name, "Element", "JSX") ||
+      isReactTypeMatch(name, "ReactElement", reactImportedName) ||
+      isReactTypeMatch(name, "SFCElement", reactImportedName)
     ) {
-      return createMember(t.identifier('element'), propTypesImportedName);
+      return createMember(t.identifier("element"), propTypesImportedName);
 
       // oneOfType
-    } else if (isReactTypeMatch(name, 'Ref', reactImportedName)) {
+    } else if (isReactTypeMatch(name, "Ref", reactImportedName)) {
       return createCall(
-        t.identifier('oneOfType'),
+        t.identifier("oneOfType"),
         [
           t.arrayExpression([
-            createMember(t.identifier('string'), propTypesImportedName),
-            createMember(t.identifier('func'), propTypesImportedName),
-            createMember(t.identifier('object'), propTypesImportedName),
+            createMember(t.identifier("string"), propTypesImportedName),
+            createMember(t.identifier("func"), propTypesImportedName),
+            createMember(t.identifier("object"), propTypesImportedName),
           ]),
         ],
         propTypesImportedName,
       );
 
       // function
-    } else if (name.endsWith('Handler')) {
-      return createMember(t.identifier('func'), propTypesImportedName);
+    } else if (name.endsWith("Handler")) {
+      return createMember(t.identifier("func"), propTypesImportedName);
 
       // object
-    } else if (name.endsWith('Event')) {
-      return createMember(t.identifier('object'), propTypesImportedName);
+    } else if (name.endsWith("Event")) {
+      return createMember(t.identifier("object"), propTypesImportedName);
 
       // native built-ins
       // } else if (NATIVE_BUILT_INS.includes(name)) {
@@ -135,7 +139,9 @@ export function convert(type: ts.Type, state: ConvertState, depth: number): Prop
       //   return convert(state.referenceTypes[name], state, depth);
 
       // custom prop type variables
-    } else if (hasCustomPropTypeSuffix(name, state.options.customPropTypeSuffixes)) {
+    } else if (
+      hasCustomPropTypeSuffix(name, state.options.customPropTypeSuffixes)
+    ) {
       return t.identifier(name);
 
       // external references (uses type checker)
@@ -144,7 +150,7 @@ export function convert(type: ts.Type, state: ConvertState, depth: number): Prop
     }
 
     // any (we need to support all these in case of unions)
-    return createMember(t.identifier('any'), propTypesImportedName);
+    return createMember(t.identifier("any"), propTypesImportedName);
 
     // [] -> PropTypes.arrayOf(), PropTypes.array
   } else if (t.isTSArrayType(type)) {
@@ -158,10 +164,13 @@ export function convert(type: ts.Type, state: ConvertState, depth: number): Prop
   } else if (t.isTSTypeLiteral(type)) {
     // object
     if (type.members.length === 0 || isMaxDepth) {
-      return createMember(t.identifier('object'), propTypesImportedName);
+      return createMember(t.identifier("object"), propTypesImportedName);
 
       // objectOf
-    } else if (type.members.length === 1 && t.isTSIndexSignature(type.members[0])) {
+    } else if (
+      type.members.length === 1 &&
+      t.isTSIndexSignature(type.members[0])
+    ) {
       // const index = type.members[0] as t.TSIndexSignature;
       // if (index.typeAnnotation && index.typeAnnotation.typeAnnotation) {
       //   const result = convert(index.typeAnnotation.typeAnnotation, state, depth);
