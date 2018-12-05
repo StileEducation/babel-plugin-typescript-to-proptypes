@@ -1051,7 +1051,7 @@ export interface Props {
 export default class TypeArray extends React.Component<Props> {
   static propTypes = {
     any: _pt.arrayOf(_pt.any).isRequired,
-    null: _pt.array.isRequired,
+    null: _pt.arrayOf(_pt.oneOf([null])).isRequired,
     numbers: _pt.arrayOf(_pt.number),
     strings: _pt.arrayOf(_pt.string).isRequired,
     booleans: _pt.arrayOf(_pt.bool).isRequired,
@@ -1101,7 +1101,7 @@ export default class TypeBuiltins extends React.Component<Props> {
     setOpt: _pt.instanceOf(WeakSet),
     promise: _pt.instanceOf(Promise).isRequired,
     promiseOpt: _pt.instanceOf(Promise),
-    union: _pt.oneOfType([_pt.instanceOf(Error), _pt.instanceOf(Date), _pt.instanceOf(RegExp)]).isRequired,
+    union: _pt.oneOfType([_pt.instanceOf(Error), _pt.instanceOf(Date), _pt.instanceOf(RegExp), _pt.oneOf([null])]).isRequired,
     children: _pt.node
   };
 
@@ -1150,7 +1150,7 @@ export default class TypeComplex extends React.Component<Props> {
       e2: _pt.func.isRequired,
       e3: _pt.oneOfType([_pt.shape({
         e1a: _pt.object.isRequired
-      })])
+      }), _pt.oneOf([null])])
     }).isRequired,
     f: _pt.any,
     g: _pt.oneOfType([_pt.func, _pt.func]).isRequired,
@@ -1215,6 +1215,39 @@ export default class TypeFunction extends React.Component<Props> {
     args: _pt.func.isRequired,
     parens: _pt.func,
     handler: _pt.func.isRequired,
+    children: _pt.node
+  };
+
+  render() {
+    return null;
+  }
+
+}"
+`;
+
+exports[`babel-plugin-typescript-to-proptypes transforms ./fixtures/type-null-undefined.ts 1`] = `
+"import _pt from 'prop-types';
+import React from \\"react\\";
+export interface Props {
+  nullable: string | null;
+  optional?: string;
+  optionalNullable?: string | null;
+  required: string;
+  literalNullable: \\"string\\" | null;
+  literalOptional?: \\"string\\";
+  literalOptionalNullable?: \\"string\\" | null;
+  literalRequired: \\"string\\";
+}
+export default class NullUndefined extends React.Component<Props> {
+  static propTypes = {
+    nullable: _pt.oneOfType([_pt.string, _pt.oneOf([null])]).isRequired,
+    optional: _pt.string,
+    optionalNullable: _pt.oneOfType([_pt.string, _pt.oneOf([null])]),
+    required: _pt.string.isRequired,
+    literalNullable: _pt.oneOfType([_pt.oneOf([\\"string\\"]), _pt.oneOf([null])]).isRequired,
+    literalOptional: _pt.oneOf([\\"string\\"]),
+    literalOptionalNullable: _pt.oneOfType([_pt.oneOf([\\"string\\"]), _pt.oneOf([null])]),
+    literalRequired: _pt.oneOf([\\"string\\"]).isRequired,
     children: _pt.node
   };
 

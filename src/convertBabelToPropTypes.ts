@@ -65,6 +65,22 @@ function convert(
   } else if (t.isTSFunctionType(type)) {
     return createMember(t.identifier("func"), propTypesImportedName);
 
+    // null -> PropTypes.oneOf([null])
+  } else if (t.isTSNullKeyword(type)) {
+    return createCall(
+      t.identifier("oneOf"),
+      [t.arrayExpression([t.nullLiteral()])],
+      propTypesImportedName,
+    );
+
+    // "foo" -> PropTypes.oneOf(["foo"])
+  } else if (t.isTSLiteralType(type)) {
+    return createCall(
+      t.identifier("oneOf"),
+      [t.arrayExpression([type.literal])],
+      propTypesImportedName,
+    );
+
     // React.ReactNode -> PropTypes.node
     // React.ReactElement -> PropTypes.element
     // React.MouseEvent -> PropTypes.object
