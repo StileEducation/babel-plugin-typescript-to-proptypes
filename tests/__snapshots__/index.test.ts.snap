@@ -1101,7 +1101,7 @@ export default class TypeBuiltins extends React.Component<Props> {
     setOpt: _pt.instanceOf(WeakSet),
     promise: _pt.instanceOf(Promise).isRequired,
     promiseOpt: _pt.instanceOf(Promise),
-    union: _pt.oneOfType([_pt.instanceOf(Error), _pt.instanceOf(Date), _pt.instanceOf(RegExp), _pt.oneOf([null])]).isRequired,
+    union: _pt.oneOfType([_pt.instanceOf(Error), _pt.instanceOf(Date), _pt.instanceOf(RegExp), _pt.oneOf([null])]),
     children: _pt.node
   };
 
@@ -1231,22 +1231,30 @@ import React from \\"react\\";
 export interface Props {
   nullable: string | null;
   optional?: string;
+  optionalUnion: string | undefined;
   optionalNullable?: string | null;
+  optionalNullableUnion: string | null | undefined;
   required: string;
   literalNullable: \\"string\\" | null;
   literalOptional?: \\"string\\";
+  literalOptionalUnion: \\"string\\" | undefined;
   literalOptionalNullable?: \\"string\\" | null;
+  literalOptionalNullableUnion: \\"string\\" | null | undefined;
   literalRequired: \\"string\\";
 }
 export default class NullUndefined extends React.Component<Props> {
   static propTypes = {
-    nullable: _pt.oneOfType([_pt.string, _pt.oneOf([null])]).isRequired,
+    nullable: _pt.oneOfType([_pt.string, _pt.oneOf([null])]),
     optional: _pt.string,
+    optionalUnion: _pt.oneOfType([_pt.string]),
     optionalNullable: _pt.oneOfType([_pt.string, _pt.oneOf([null])]),
+    optionalNullableUnion: _pt.oneOfType([_pt.string, _pt.oneOf([null])]),
     required: _pt.string.isRequired,
-    literalNullable: _pt.oneOfType([_pt.oneOf([\\"string\\"]), _pt.oneOf([null])]).isRequired,
+    literalNullable: _pt.oneOfType([_pt.oneOf([\\"string\\"]), _pt.oneOf([null])]),
     literalOptional: _pt.oneOf([\\"string\\"]),
+    literalOptionalUnion: _pt.oneOfType([_pt.oneOf([\\"string\\"])]),
     literalOptionalNullable: _pt.oneOfType([_pt.oneOf([\\"string\\"]), _pt.oneOf([null])]),
+    literalOptionalNullableUnion: _pt.oneOfType([_pt.oneOf([\\"string\\"]), _pt.oneOf([null])]),
     literalRequired: _pt.oneOf([\\"string\\"]).isRequired,
     children: _pt.node
   };

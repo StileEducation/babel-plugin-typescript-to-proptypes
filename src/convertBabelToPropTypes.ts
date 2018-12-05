@@ -340,12 +340,14 @@ function convertListToProps(
     if (!property.typeAnnotation) {
       return;
     }
+    let type = property.typeAnnotation.typeAnnotation;
 
-    const propType = convert(
-      property.typeAnnotation.typeAnnotation,
-      state,
-      depth,
-    );
+    // Remove wrapping parens
+    if (t.isTSParenthesizedType(type)) {
+      type = type.typeAnnotation;
+    }
+
+    const propType = convert(type, state, depth);
 
     if (propType) {
       propTypes.push(
@@ -354,6 +356,13 @@ function convertListToProps(
           wrapIsRequired(
             propType,
             property.optional ||
+              // If the value can be null or undefined, then it can't be required
+              (t.isTSUnionType(type) &&
+                type.types.some(
+                  subType =>
+                    t.isTSNullKeyword(subType) ||
+                    t.isTSUndefinedKeyword(subType),
+                )) ||
               defaultProps.includes((property.key as t.Identifier).name),
           ),
         ),
