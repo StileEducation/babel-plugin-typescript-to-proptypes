@@ -19,7 +19,7 @@ export default class CustomSuffix extends React.Component<Props> {
     age: AgePropType.isRequired,
     ageOpt: AgePropType,
     both: _pt.oneOfType([NameShape, AgePropType, _pt.bool]).isRequired,
-    height: _pt.any.isRequired,
+    height: _pt.any,
     children: _pt.node
   };
 
@@ -1318,7 +1318,7 @@ export interface Props {
 }
 export default class TypePrimitives extends React.Component<Props> {
   static propTypes = {
-    any: _pt.any.isRequired,
+    any: _pt.any,
     number: _pt.number.isRequired,
     string: _pt.string.isRequired,
     boolean: _pt.bool.isRequired,

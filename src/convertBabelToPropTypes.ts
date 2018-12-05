@@ -356,10 +356,16 @@ function convertListToProps(
           wrapIsRequired(
             propType,
             property.optional ||
+              // Any PropTypes (eg. from imported types) can't be
+              // required, because they may be null or undefined.
+              (t.isMemberExpression(propType) &&
+                propType.property &&
+                (propType.property as any).name === "any") ||
               // If the value can be null or undefined, then it can't be required
               (t.isTSUnionType(type) &&
                 type.types.some(
                   subType =>
+                    t.isTSAnyKeyword(subType) ||
                     t.isTSNullKeyword(subType) ||
                     t.isTSUndefinedKeyword(subType),
                 )) ||
