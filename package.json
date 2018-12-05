@@ -14,6 +14,7 @@
     "prettier": "beemo prettier",
     "release": "np --yolo --no-yarn",
     "type": "beemo typescript --noEmit",
+    "prepare": "yarn build",
     "prerelease": "yarn test && yarn run build",
     "pretest": "yarn run type",
     "test": "yarn run jest",
