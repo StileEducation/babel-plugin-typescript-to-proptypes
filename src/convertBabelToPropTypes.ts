@@ -355,6 +355,7 @@ export default function convertToPropTypes(
   defaultProps: string[],
 ): t.ObjectProperty[] {
   const properties: t.ObjectProperty[] = [];
+  let typeIncludesExplicitChildren = false;
 
   typeNames.forEach(typeName => {
     if (types[typeName]) {
@@ -362,7 +363,22 @@ export default function convertToPropTypes(
         ...convertListToProps(types[typeName], state, defaultProps, 0),
       );
     }
+
+    if (typeName === "children") {
+      typeIncludesExplicitChildren = true;
+    }
   });
+
+  // @types/react includes an implicit 'children' prop on all components, so mirror that behavior
+  // unless a more explicit type was specified.
+  if (!typeIncludesExplicitChildren) {
+    properties.push(
+      t.objectProperty(
+        t.identifier("children"),
+        createMember(t.identifier("node"), state.propTypes.defaultImport),
+      ),
+    );
+  }
 
   return properties;
 }

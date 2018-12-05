@@ -19,7 +19,8 @@ export default class CustomSuffix extends React.Component<Props> {
     age: AgePropType.isRequired,
     ageOpt: AgePropType,
     both: _pt.oneOfType([NameShape, AgePropType, _pt.bool]).isRequired,
-    height: _pt.any.isRequired
+    height: _pt.any.isRequired,
+    children: _pt.node
   };
 
   render() {
@@ -38,7 +39,8 @@ interface Props {
 }
 export default class ForbidExtraProps extends React.Component<Props> {
   static propTypes = _forbidExtraProps({
-    name: _pt.string.isRequired
+    name: _pt.string.isRequired,
+    children: _pt.node
   });
 
   render() {
@@ -58,6 +60,7 @@ interface Props {
 }
 export default class MergeForbidExtraProps extends React.Component<Props> {
   static propTypes = forbidExtraProps({
+    children: _pt.node,
     name: _pt.string.isRequired,
     age: int()
   });
@@ -86,7 +89,8 @@ export default class RecursiveType extends React.Component<Props> {
           nested: _pt.object.isRequired
         }).isRequired
       }).isRequired
-    }).isRequired
+    }).isRequired,
+    children: _pt.node
   };
 
   render() {
@@ -108,7 +112,8 @@ interface Props {
 }
 export default class IndexAccess extends React.Component<Props> {
   static propTypes = {
-    list: _pt.oneOf([1, 2, 3, 4, 5]).isRequired
+    list: _pt.oneOf([1, 2, 3, 4, 5]).isRequired,
+    children: _pt.node
   };
 
   render() {
@@ -145,7 +150,8 @@ export default class MaxDepth extends React.Component<Props> {
           three: _pt.object.isRequired
         }).isRequired
       }).isRequired
-    }).isRequired
+    }).isRequired,
+    children: _pt.node
   };
 
   render() {
@@ -166,7 +172,8 @@ export interface State {
 }
 export default class AvoidsState extends React.Component<Props, State> {
   static propTypes = {
-    name: _pt.string.isRequired
+    name: _pt.string.isRequired,
+    children: _pt.node
   };
 
   render() {
@@ -184,7 +191,8 @@ interface Props {
 }
 export default class ClassCustomReactImportName extends R.Component<Props> {
   static propTypes = {
-    name: _pt.string.isRequired
+    name: _pt.string.isRequired,
+    children: _pt.node
   };
 
   render() {
@@ -202,7 +210,8 @@ interface Props {
 }
 export default class ClassCustomReactImportNamePure extends R.PureComponent<Props> {
   static propTypes = {
-    name: _pt.string.isRequired
+    name: _pt.string.isRequired,
+    children: _pt.node
   };
 
   render() {
@@ -220,7 +229,8 @@ interface Props {
 }
 export default class ClassDefaultProps extends React.Component<Props> {
   static propTypes = {
-    name: _pt.string
+    name: _pt.string,
+    children: _pt.node
   };
   static defaultProps = {
     name: 'Foo'
@@ -249,7 +259,8 @@ export default class ClassExtendedInterfaces extends React.Component<Props> {
   static propTypes = {
     a: _pt.number.isRequired,
     b: _pt.bool.isRequired,
-    name: _pt.string.isRequired
+    name: _pt.string.isRequired,
+    children: _pt.node
   };
 
   render() {
@@ -275,7 +286,8 @@ export default class ClassExtendedTypeAliases extends React.Component<Props> {
   static propTypes = {
     a: _pt.number.isRequired,
     b: _pt.bool.isRequired,
-    name: _pt.string.isRequired
+    name: _pt.string.isRequired,
+    children: _pt.node
   };
 
   render() {
@@ -293,6 +305,7 @@ interface Props {
 }
 export default class ClassMergeWithExistingPropTypes extends React.Component<Props> {
   static propTypes = {
+    children: PropTypes.node,
     name: PropTypes.string.isRequired,
     custom: PropTypes.number.isRequired
   };
@@ -313,6 +326,7 @@ interface Props {
 const CustomShape = PropTypes.string;
 export default class ClassMergeWithNoOverride extends React.Component<Props> {
   static propTypes = {
+    children: PropTypes.node,
     name: CustomShape.isRequired
   };
 
@@ -324,8 +338,13 @@ export default class ClassMergeWithNoOverride extends React.Component<Props> {
 `;
 
 exports[`babel-plugin-typescript-to-proptypes transforms ./fixtures/class/missing-type.ts 1`] = `
-"import React from 'react';
+"import _pt from 'prop-types';
+import React from 'react';
 export default class ClassMissingType extends React.Component<Props> {
+  static propTypes = {
+    children: _pt.node
+  };
+
   render() {
     return null;
   }
@@ -345,7 +364,8 @@ export interface BProps {
 export default class ClassMultipleGenerics extends React.Component<AProps & BProps> {
   static propTypes = {
     a: _pt.number.isRequired,
-    b: _pt.bool.isRequired
+    b: _pt.bool.isRequired,
+    children: _pt.node
   };
 
   render() {
@@ -363,7 +383,8 @@ interface Props {
 }
 export default class ClassNamedReactImports extends Component<Props> {
   static propTypes = {
-    name: _pt.string.isRequired
+    name: _pt.string.isRequired,
+    children: _pt.node
   };
 
   render() {
@@ -381,7 +402,8 @@ interface Props {
 }
 export default class ClassNamedReactImportsPure extends PureComponent<Props> {
   static propTypes = {
-    name: _pt.string.isRequired
+    name: _pt.string.isRequired,
+    children: _pt.node
   };
 
   render() {
@@ -402,9 +424,14 @@ export default class ClassNoGenerics extends React.Component {
 `;
 
 exports[`babel-plugin-typescript-to-proptypes transforms ./fixtures/class/no-type-propeties.ts 1`] = `
-"import React from 'react';
+"import _pt from 'prop-types';
+import React from 'react';
 interface Props {}
 export default class ClassNoTypeProperties extends React.Component<Props> {
+  static propTypes = {
+    children: _pt.node
+  };
+
   render() {
     return null;
   }
@@ -420,7 +447,8 @@ interface Props {
 }
 export default class ClassStandard extends React.Component<Props> {
   static propTypes = {
-    name: _pt.string.isRequired
+    name: _pt.string.isRequired,
+    children: _pt.node
   };
 
   render() {
@@ -438,7 +466,8 @@ export interface Props {
 }
 export default class CustomPropTypesImportName extends React.Component<Props> {
   static propTypes = {
-    name: PT.string.isRequired
+    name: PT.string.isRequired,
+    children: PT.node
   };
 
   render() {
@@ -456,7 +485,8 @@ export interface Props {
 }
 export default class CustomPropTypesImportNamespace extends React.Component<Props> {
   static propTypes = {
-    name: PT.string.isRequired
+    name: PT.string.isRequired,
+    children: PT.node
   };
 
   render() {
@@ -474,7 +504,8 @@ export interface Props {
 }
 export default class CustomPropTypesNamedNoDefault extends React.Component<Props> {
   static propTypes = {
-    name: PropTypes.string.isRequired
+    name: PropTypes.string.isRequired,
+    children: PropTypes.node
   };
 
   render() {
@@ -492,7 +523,8 @@ export interface Props {
 }
 export default class CustomReactImportName extends R.Component<Props> {
   static propTypes = {
-    name: _pt.string.isRequired
+    name: _pt.string.isRequired,
+    children: _pt.node
   };
 
   render() {
@@ -510,7 +542,8 @@ export interface Props {
 }
 export default class CustomReactImportNamespace extends R.Component<Props> {
   static propTypes = {
-    name: _pt.string.isRequired
+    name: _pt.string.isRequired,
+    children: _pt.node
   };
 
   render() {
@@ -530,7 +563,8 @@ export default function FuncCustomReactImportName(props: Props) {
   return null;
 }
 FuncCustomReactImportName.propTypes = {
-  name: _pt.string.isRequired
+  name: _pt.string.isRequired,
+  children: _pt.node
 };"
 `;
 
@@ -544,7 +578,8 @@ export default function FuncDefaultProps(props: Props) {
   return null;
 }
 FuncDefaultProps.propTypes = {
-  name: _pt.string
+  name: _pt.string,
+  children: _pt.node
 };
 FuncDefaultProps.defaultProps = {
   name: 'Foo'
@@ -561,7 +596,8 @@ export default function FuncExportDefault(props: Props) {
   return null;
 }
 FuncExportDefault.propTypes = {
-  name: _pt.string.isRequired
+  name: _pt.string.isRequired,
+  children: _pt.node
 };"
 `;
 
@@ -575,7 +611,8 @@ export function FuncExportNamed(props: Props) {
   return null;
 }
 FuncExportNamed.propTypes = {
-  name: _pt.string.isRequired
+  name: _pt.string.isRequired,
+  children: _pt.node
 };"
 `;
 
@@ -597,7 +634,8 @@ export default function FuncExtendedInterfaces(props: Props) {
 FuncExtendedInterfaces.propTypes = {
   a: _pt.number.isRequired,
   b: _pt.bool.isRequired,
-  name: _pt.string.isRequired
+  name: _pt.string.isRequired,
+  children: _pt.node
 };"
 `;
 
@@ -619,7 +657,8 @@ export default function FuncExtendedTypeAliases(props: Props) {
 FuncExtendedTypeAliases.propTypes = {
   a: _pt.number.isRequired,
   b: _pt.bool.isRequired,
-  name: _pt.string.isRequired
+  name: _pt.string.isRequired,
+  children: _pt.node
 };"
 `;
 
@@ -633,6 +672,7 @@ export default function FuncMergeWithExistingPropTypes(props: Props) {
   return null;
 }
 FuncMergeWithExistingPropTypes.propTypes = {
+  children: PropTypes.node,
   name: PropTypes.string.isRequired,
   custom: PropTypes.number.isRequired
 };"
@@ -649,15 +689,20 @@ export default function FuncMergeWithNoOverride(props: Props) {
   return null;
 }
 FuncMergeWithNoOverride.propTypes = {
+  children: PropTypes.node,
   name: CustomShape.isRequired
 };"
 `;
 
 exports[`babel-plugin-typescript-to-proptypes transforms ./fixtures/function/missing-type.ts 1`] = `
-"import React from 'react';
+"import _pt from 'prop-types';
+import React from 'react';
 export default function FuncMissingType(props: Props) {
   return null;
-}"
+}
+FuncMissingType.propTypes = {
+  children: _pt.node
+};"
 `;
 
 exports[`babel-plugin-typescript-to-proptypes transforms ./fixtures/function/multiple-annotations.ts 1`] = `
@@ -674,7 +719,8 @@ export default function FuncMultipleAnnotations(props: AProps & BProps) {
 }
 FuncMultipleAnnotations.propTypes = {
   a: _pt.number.isRequired,
-  b: _pt.bool.isRequired
+  b: _pt.bool.isRequired,
+  children: _pt.node
 };"
 `;
 
@@ -697,7 +743,8 @@ function FuncNoExport(props: Props) {
 }
 
 FuncNoExport.propTypes = {
-  name: _pt.string.isRequired
+  name: _pt.string.isRequired,
+  children: _pt.node
 };"
 `;
 
@@ -709,11 +756,15 @@ export default function FuncNoReactImport(props: Props) {
 `;
 
 exports[`babel-plugin-typescript-to-proptypes transforms ./fixtures/function/no-type-propeties.ts 1`] = `
-"import React from 'react';
+"import _pt from 'prop-types';
+import React from 'react';
 interface Props {}
 export default function FuncNoTypeProperties(props: Props) {
   return null;
-}"
+}
+FuncNoTypeProperties.propTypes = {
+  children: _pt.node
+};"
 `;
 
 exports[`babel-plugin-typescript-to-proptypes transforms ./fixtures/function/standard.ts 1`] = `
@@ -726,7 +777,8 @@ export default function FuncStandard(props: Props) {
   return null;
 }
 FuncStandard.propTypes = {
-  name: _pt.string.isRequired
+  name: _pt.string.isRequired,
+  children: _pt.node
 };"
 `;
 
@@ -740,7 +792,8 @@ export function withClass() {
   return Component => {
     class HOCComponent extends React.Component<Props> {
       static propTypes = {
-        name: _pt.string.isRequired
+        name: _pt.string.isRequired,
+        children: _pt.node
       };
 
       render() {
@@ -759,7 +812,8 @@ export function withFunction() {
     }
 
     HOCFunc.propTypes = {
-      name: _pt.string.isRequired
+      name: _pt.string.isRequired,
+      children: _pt.node
     };
     return HOCFunc;
   };
@@ -769,7 +823,8 @@ export function withVar() {
     const HOCVar: React.SFC<Props> = () => null;
 
     HOCVar.propTypes = {
-      name: _pt.string.isRequired
+      name: _pt.string.isRequired,
+      children: _pt.node
     };
     return HOCVar;
   };
@@ -785,7 +840,8 @@ interface Props {
 export function withClass() {
   return Component => class HOCComponent extends React.Component<Props> {
     static propTypes = {
-      name: _pt.string.isRequired
+      name: _pt.string.isRequired,
+      children: _pt.node
     };
 
     render() {
@@ -804,11 +860,30 @@ export function withVar() {
     const HOCVar: React.SFC<Props> = () => null;
 
     HOCVar.propTypes = {
-      name: _pt.string.isRequired
+      name: _pt.string.isRequired,
+      children: _pt.node
     };
     return HOCVar;
   };
 }"
+`;
+
+exports[`babel-plugin-typescript-to-proptypes transforms ./fixtures/implicit-children.ts 1`] = `
+"import _pt from 'prop-types';
+import React from \\"react\\";
+export interface Props {
+  theme: \\"blue\\" | \\"green\\";
+}
+
+const MyComponent: React.SFC<Props> = function (props) {
+  return props.children;
+};
+
+MyComponent.propTypes = {
+  theme: _pt.oneOf([\\"blue\\", \\"green\\"]).isRequired,
+  children: _pt.node
+};
+export default MyComponent;"
 `;
 
 exports[`babel-plugin-typescript-to-proptypes transforms ./fixtures/multiple-components.ts 1`] = `
@@ -820,7 +895,8 @@ interface AProps {
 
 class MultipleComponentsClass extends React.Component<AProps> {
   static propTypes = {
-    foo: _pt.string.isRequired
+    foo: _pt.string.isRequired,
+    children: _pt.node
   };
 
   render() {
@@ -838,7 +914,8 @@ function MultipleComponentsFunc(props: BProps) {
 }
 
 MultipleComponentsFunc.propTypes = {
-  bar: _pt.number.isRequired
+  bar: _pt.number.isRequired,
+  children: _pt.node
 };
 interface CProps {
   bar: number;
@@ -847,7 +924,8 @@ interface CProps {
 const MultipleComponentsVar: React.SFC<CProps> = () => null;
 
 MultipleComponentsVar.propTypes = {
-  bar: _pt.number.isRequired
+  bar: _pt.number.isRequired,
+  children: _pt.node
 };"
 `;
 
@@ -863,7 +941,8 @@ interface BProps {
 
 class NestedComponentsClass extends React.Component<AProps> {
   static propTypes = {
-    foo: _pt.string.isRequired
+    foo: _pt.string.isRequired,
+    children: _pt.node
   };
 
   render() {
@@ -872,7 +951,8 @@ class NestedComponentsClass extends React.Component<AProps> {
     }
 
     NestedComponentsFunc.propTypes = {
-      bar: _pt.number.isRequired
+      bar: _pt.number.isRequired,
+      children: _pt.node
     };
     return null;
   }
@@ -888,7 +968,8 @@ export interface Props {
 }
 export default class NoPropTypesImport extends React.Component<Props> {
   static propTypes = {
-    name: _pt.string.isRequired
+    name: _pt.string.isRequired,
+    children: _pt.node
   };
 
   render() {
@@ -923,7 +1004,8 @@ export interface Props {
 }
 export default class PropTypesImport extends React.Component<Props> {
   static propTypes = {
-    name: PropTypes.string.isRequired
+    name: PropTypes.string.isRequired,
+    children: PropTypes.node
   };
 
   render() {
@@ -941,7 +1023,8 @@ export interface Props {
 }
 export default class ReactImportNamespace extends React.Component<Props> {
   static propTypes = {
-    name: _pt.string.isRequired
+    name: _pt.string.isRequired,
+    children: _pt.node
   };
 
   render() {
@@ -975,7 +1058,8 @@ export default class TypeArray extends React.Component<Props> {
     objects: _pt.arrayOf(_pt.object),
     union: _pt.arrayOf(_pt.oneOfType([_pt.string, _pt.number])).isRequired,
     intersection: _pt.arrayOf(_pt.oneOfType([_pt.string, _pt.number])).isRequired,
-    nested: _pt.arrayOf(_pt.arrayOf(_pt.string))
+    nested: _pt.arrayOf(_pt.arrayOf(_pt.string)),
+    children: _pt.node
   };
 
   render() {
@@ -1017,7 +1101,8 @@ export default class TypeBuiltins extends React.Component<Props> {
     setOpt: _pt.instanceOf(WeakSet),
     promise: _pt.instanceOf(Promise).isRequired,
     promiseOpt: _pt.instanceOf(Promise),
-    union: _pt.oneOfType([_pt.instanceOf(Error), _pt.instanceOf(Date), _pt.instanceOf(RegExp)]).isRequired
+    union: _pt.oneOfType([_pt.instanceOf(Error), _pt.instanceOf(Date), _pt.instanceOf(RegExp)]).isRequired,
+    children: _pt.node
   };
 
   render() {
@@ -1069,7 +1154,8 @@ export default class TypeComplex extends React.Component<Props> {
     }).isRequired,
     f: _pt.any,
     g: _pt.oneOfType([_pt.func, _pt.func]).isRequired,
-    h: _pt.oneOfType([_pt.objectOf(_pt.number), _pt.objectOf(_pt.arrayOf(_pt.string))])
+    h: _pt.oneOfType([_pt.objectOf(_pt.number), _pt.objectOf(_pt.arrayOf(_pt.string))]),
+    children: _pt.node
   };
 
   render() {
@@ -1099,7 +1185,8 @@ export default class TypeEnum extends React.Component<Props> {
     strUnion: _pt.oneOf(['foo', 'bar', 'baz']),
     strIntersection: _pt.oneOf(['foo', 'bar', 'baz']).isRequired,
     numUnion: _pt.oneOf([1, 2, 3]).isRequired,
-    numIntersection: _pt.oneOf([1, 2, 3])
+    numIntersection: _pt.oneOf([1, 2, 3]),
+    children: _pt.node
   };
 
   render() {
@@ -1127,7 +1214,8 @@ export default class TypeFunction extends React.Component<Props> {
     typeReturn: _pt.func,
     args: _pt.func.isRequired,
     parens: _pt.func,
-    handler: _pt.func.isRequired
+    handler: _pt.func.isRequired,
+    children: _pt.node
   };
 
   render() {
@@ -1161,7 +1249,8 @@ export default class TypeObject extends React.Component<Props> {
       id: _pt.number.isRequired,
       name: _pt.string,
       status: _pt.oneOf(['active', 'pending']).isRequired
-    }).isRequired
+    }).isRequired,
+    children: _pt.node
   };
 
   render() {
@@ -1197,7 +1286,8 @@ export default class TypePrimitives extends React.Component<Props> {
     numberOpt: _pt.number,
     stringOpt: _pt.string,
     booleanOpt: _pt.bool,
-    symbolOpt: _pt.symbol
+    symbolOpt: _pt.symbol,
+    children: _pt.node
   };
 
   render() {
@@ -1259,7 +1349,8 @@ export default class TypeReact extends React.Component<Props> {
     jsx: _pt.element.isRequired,
     event: _pt.object.isRequired,
     eventAlias: _pt.object,
-    ref: _pt.oneOfType([_pt.string, _pt.func, _pt.object]).isRequired
+    ref: _pt.oneOfType([_pt.string, _pt.func, _pt.object]).isRequired,
+    children: _pt.node
   };
 
   render() {
@@ -1279,7 +1370,8 @@ interface Props {
 const VarCustomReactImportName: R.SFC<Props> = () => null;
 
 VarCustomReactImportName.propTypes = {
-  name: _pt.string.isRequired
+  name: _pt.string.isRequired,
+  children: _pt.node
 };
 export default VarCustomReactImportName;"
 `;
@@ -1294,7 +1386,8 @@ interface Props {
 const VarDefaultProps: React.SFC<Props> = () => null;
 
 VarDefaultProps.propTypes = {
-  name: _pt.string
+  name: _pt.string,
+  children: _pt.node
 };
 VarDefaultProps.defaultProps = {
   name: 'Foo'
@@ -1312,7 +1405,8 @@ interface Props {
 const VarExportDefault: React.SFC<Props> = () => null;
 
 VarExportDefault.propTypes = {
-  name: _pt.string.isRequired
+  name: _pt.string.isRequired,
+  children: _pt.node
 };
 export default VarExportDefault;"
 `;
@@ -1325,7 +1419,8 @@ interface Props {
 }
 export const VarExportNamed: React.SFC<Props> = () => null;
 VarExportNamed.propTypes = {
-  name: _pt.string.isRequired
+  name: _pt.string.isRequired,
+  children: _pt.node
 };"
 `;
 
@@ -1347,7 +1442,8 @@ const VarExtendedInterfaces: React.SFC<Props> = () => null;
 VarExtendedInterfaces.propTypes = {
   a: _pt.number.isRequired,
   b: _pt.bool.isRequired,
-  name: _pt.string.isRequired
+  name: _pt.string.isRequired,
+  children: _pt.node
 };
 export default VarExtendedInterfaces;"
 `;
@@ -1370,7 +1466,8 @@ const VarExtendedTypeAliases: React.SFC<Props> = () => null;
 VarExtendedTypeAliases.propTypes = {
   a: _pt.number.isRequired,
   b: _pt.bool.isRequired,
-  name: _pt.string.isRequired
+  name: _pt.string.isRequired,
+  children: _pt.node
 };
 export default VarExtendedTypeAliases;"
 `;
@@ -1385,6 +1482,7 @@ interface Props {
 const VarMergeWithExistingPropTypes: React.SFC<Props> = () => null;
 
 VarMergeWithExistingPropTypes.propTypes = {
+  children: PropTypes.node,
   name: PropTypes.string.isRequired,
   custom: PropTypes.number.isRequired
 };
@@ -1402,16 +1500,21 @@ const CustomShape = PropTypes.string;
 const VarMergeWithNoOverride: React.SFC<Props> = () => null;
 
 VarMergeWithNoOverride.propTypes = {
+  children: PropTypes.node,
   name: CustomShape.isRequired
 };
 export default VarMergeWithNoOverride;"
 `;
 
 exports[`babel-plugin-typescript-to-proptypes transforms ./fixtures/var/missing-type.ts 1`] = `
-"import React from 'react';
+"import _pt from 'prop-types';
+import React from 'react';
 
 const VarMissingType: React.SFC<Props> = () => null;
 
+VarMissingType.propTypes = {
+  children: _pt.node
+};
 export default VarMissingType;"
 `;
 
@@ -1429,7 +1532,8 @@ const VarMultipleAnnotations: React.SFC<AProps & BProps> = () => null;
 
 VarMultipleAnnotations.propTypes = {
   a: _pt.number.isRequired,
-  b: _pt.bool.isRequired
+  b: _pt.bool.isRequired,
+  children: _pt.node
 };
 export default VarMultipleAnnotations;"
 `;
@@ -1452,7 +1556,8 @@ interface Props {
 const VarNoExport: React.SFC<Props> = () => null;
 
 VarNoExport.propTypes = {
-  name: _pt.string.isRequired
+  name: _pt.string.isRequired,
+  children: _pt.node
 };"
 `;
 
@@ -1465,11 +1570,15 @@ export default VarNoReactImport;"
 `;
 
 exports[`babel-plugin-typescript-to-proptypes transforms ./fixtures/var/no-type-propeties.ts 1`] = `
-"import React from 'react';
+"import _pt from 'prop-types';
+import React from 'react';
 interface Props {}
 
 const VarNoTypeProperties: React.SFC<Props> = () => null;
 
+VarNoTypeProperties.propTypes = {
+  children: _pt.node
+};
 export default VarNoTypeProperties;"
 `;
 
@@ -1483,7 +1592,8 @@ interface Props {
 const VarStandard: React.SFC<Props> = () => null;
 
 VarStandard.propTypes = {
-  name: _pt.string.isRequired
+  name: _pt.string.isRequired,
+  children: _pt.node
 };
 export default VarStandard;"
 `;
@@ -1493,7 +1603,8 @@ exports[`babel-plugin-typescript-to-proptypes works correctly when file is JSX/T
 import React from 'react';
 export default class JSX extends React.Component {
   static propTypes = {
-    name: _pt.string.isRequired
+    name: _pt.string.isRequired,
+    children: _pt.node
   };
 
   render() {
@@ -1559,7 +1670,8 @@ var ESTarget = function (_React$Component) {
 exports.default = ESTarget;
 
 _defineProperty(ESTarget, 'propTypes', {
-  name: _propTypes.default.string.isRequired
+  name: _propTypes.default.string.isRequired,
+  children: _propTypes.default.node
 });"
 `;
 
@@ -1598,7 +1710,8 @@ var ESTarget = function (_React$Component) {
 exports.default = ESTarget;
 
 _defineProperty(ESTarget, 'propTypes', {
-  name: _propTypes.default.string.isRequired
+  name: _propTypes.default.string.isRequired,
+  children: _propTypes.default.node
 });"
 `;
 
@@ -1658,7 +1771,8 @@ var ESTarget = function (_React$Component) {
 exports.default = ESTarget;
 
 _defineProperty(ESTarget, 'propTypes', {
-  name: _propTypes.default.string.isRequired
+  name: _propTypes.default.string.isRequired,
+  children: _propTypes.default.node
 });"
 `;
 
@@ -1697,7 +1811,8 @@ var ESTarget = function (_React$Component) {
 exports.default = ESTarget;
 
 _defineProperty(ESTarget, 'propTypes', {
-  name: _propTypes.default.string.isRequired
+  name: _propTypes.default.string.isRequired,
+  children: _propTypes.default.node
 });"
 `;
 
@@ -1721,7 +1836,8 @@ interface Props {
 
 class ESTarget extends _react.default.Component<Props> {
   static propTypes = {
-    name: _propTypes.default.string.isRequired
+    name: _propTypes.default.string.isRequired,
+    children: _propTypes.default.node
   };
 
   render() {
@@ -1751,7 +1867,8 @@ interface Props {
 
 class ESTarget extends _react.default.Component<Props> {
   static propTypes = {
-    name: _propTypes.default.string.isRequired
+    name: _propTypes.default.string.isRequired,
+    children: _propTypes.default.node
   };
 
   render() {
@@ -1779,7 +1896,8 @@ var _react = _interopRequireDefault(require('react'));
 
 class TSPreset extends _react.default.Component {
   static propTypes = {
-    name: _propTypes.default.string.isRequired
+    name: _propTypes.default.string.isRequired,
+    children: _propTypes.default.node
   };
 
   render() {
@@ -1805,7 +1923,8 @@ var _react = _interopRequireDefault(require('react'));
 
 class TSPreset extends _react.default.Component {
   static propTypes = {
-    name: _propTypes.default.string.isRequired
+    name: _propTypes.default.string.isRequired,
+    children: _propTypes.default.node
   };
 
   render() {
@@ -1822,7 +1941,8 @@ exports[`babel-plugin-typescript-to-proptypes works correctly when using the tra
 import React from 'react';
 export default class TSPreset extends React.Component {
   static propTypes = {
-    name: _pt.string.isRequired
+    name: _pt.string.isRequired,
+    children: _pt.node
   };
 
   render() {
@@ -1837,7 +1957,8 @@ exports[`babel-plugin-typescript-to-proptypes works correctly when using the typ
 import React from 'react';
 export default class TSPreset extends React.Component {
   static propTypes = {
-    name: _pt.string.isRequired
+    name: _pt.string.isRequired,
+    children: _pt.node
   };
 
   render() {
