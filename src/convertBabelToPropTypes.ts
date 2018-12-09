@@ -453,7 +453,7 @@ export default function convertToPropTypes(
 
   // @types/react includes an implicit 'children' prop on all components, so mirror that behavior
   // unless a more explicit type was specified.
-  if (!typeIncludesExplicitChildren) {
+  if (!typeIncludesExplicitChildren && properties.length > 0) {
     properties.push(
       t.objectProperty(
         t.identifier("children"),

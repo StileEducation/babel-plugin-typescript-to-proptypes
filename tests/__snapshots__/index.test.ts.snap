@@ -338,13 +338,8 @@ export default class ClassMergeWithNoOverride extends React.Component<Props> {
 `;
 
 exports[`babel-plugin-typescript-to-proptypes transforms ./fixtures/class/missing-type.ts 1`] = `
-"import _pt from 'prop-types';
-import React from 'react';
+"import React from 'react';
 export default class ClassMissingType extends React.Component<Props> {
-  static propTypes = {
-    children: _pt.node
-  };
-
   render() {
     return null;
   }
@@ -424,14 +419,9 @@ export default class ClassNoGenerics extends React.Component {
 `;
 
 exports[`babel-plugin-typescript-to-proptypes transforms ./fixtures/class/no-type-propeties.ts 1`] = `
-"import _pt from 'prop-types';
-import React from 'react';
+"import React from 'react';
 interface Props {}
 export default class ClassNoTypeProperties extends React.Component<Props> {
-  static propTypes = {
-    children: _pt.node
-  };
-
   render() {
     return null;
   }
@@ -695,14 +685,10 @@ FuncMergeWithNoOverride.propTypes = {
 `;
 
 exports[`babel-plugin-typescript-to-proptypes transforms ./fixtures/function/missing-type.ts 1`] = `
-"import _pt from 'prop-types';
-import React from 'react';
+"import React from 'react';
 export default function FuncMissingType(props: Props) {
   return null;
-}
-FuncMissingType.propTypes = {
-  children: _pt.node
-};"
+}"
 `;
 
 exports[`babel-plugin-typescript-to-proptypes transforms ./fixtures/function/multiple-annotations.ts 1`] = `
@@ -756,15 +742,11 @@ export default function FuncNoReactImport(props: Props) {
 `;
 
 exports[`babel-plugin-typescript-to-proptypes transforms ./fixtures/function/no-type-propeties.ts 1`] = `
-"import _pt from 'prop-types';
-import React from 'react';
+"import React from 'react';
 interface Props {}
 export default function FuncNoTypeProperties(props: Props) {
   return null;
-}
-FuncNoTypeProperties.propTypes = {
-  children: _pt.node
-};"
+}"
 `;
 
 exports[`babel-plugin-typescript-to-proptypes transforms ./fixtures/function/standard.ts 1`] = `
@@ -1599,14 +1581,10 @@ export default VarMergeWithNoOverride;"
 `;
 
 exports[`babel-plugin-typescript-to-proptypes transforms ./fixtures/var/missing-type.ts 1`] = `
-"import _pt from 'prop-types';
-import React from 'react';
+"import React from 'react';
 
 const VarMissingType: React.SFC<Props> = () => null;
 
-VarMissingType.propTypes = {
-  children: _pt.node
-};
 export default VarMissingType;"
 `;
 
@@ -1662,15 +1640,11 @@ export default VarNoReactImport;"
 `;
 
 exports[`babel-plugin-typescript-to-proptypes transforms ./fixtures/var/no-type-propeties.ts 1`] = `
-"import _pt from 'prop-types';
-import React from 'react';
+"import React from 'react';
 interface Props {}
 
 const VarNoTypeProperties: React.SFC<Props> = () => null;
 
-VarNoTypeProperties.propTypes = {
-  children: _pt.node
-};
 export default VarNoTypeProperties;"
 `;
 
