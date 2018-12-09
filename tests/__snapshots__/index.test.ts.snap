@@ -902,9 +902,9 @@ interface MyType2 {
 type Props = MyType1 | MyType2;
 export default class InterfaceUnion extends React.Component<Props> {
   static propTypes = {
-    foo: _pt.oneOfType([_pt.oneOf([\\"foo1\\"]).isRequired, _pt.oneOf([\\"foo2\\"]).isRequired]).isRequired,
-    bar: _pt.oneOf([\\"bar\\"]).isRequired,
-    baz: _pt.oneOf([\\"baz\\"]).isRequired,
+    foo: _pt.oneOfType([_pt.oneOf([\\"foo1\\"]), _pt.oneOf([\\"foo2\\"])]),
+    bar: _pt.oneOf([\\"bar\\"]),
+    baz: _pt.oneOf([\\"baz\\"]),
     children: _pt.node
   };
 

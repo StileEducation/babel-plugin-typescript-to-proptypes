@@ -42,6 +42,7 @@ export default declare((api: any, options: PluginOptions, root: string) => {
           namedImports: [],
         },
         componentTypes: {},
+        componentTypesIsUnionMap: {},
         filePath: "",
         options,
         propTypes: {
@@ -225,20 +226,20 @@ export default declare((api: any, options: PluginOptions, root: string) => {
 
             // `interface FooProps {}`
             TSInterfaceDeclaration({ node }: Path<t.TSInterfaceDeclaration>) {
-              state.componentTypes[node.id.name] = extractTypeProperties(
-                node,
-                state.componentTypes,
-              );
+              [
+                state.componentTypes[node.id.name],
+                state.componentTypesIsUnionMap[node.id.name],
+              ] = extractTypeProperties(node, state.componentTypes);
 
               state.referenceTypes[node.id.name] = node;
             },
 
             // `type FooProps = {}`
             TSTypeAliasDeclaration({ node }: Path<t.TSTypeAliasDeclaration>) {
-              state.componentTypes[node.id.name] = extractTypeProperties(
-                node,
-                state.componentTypes,
-              );
+              [
+                state.componentTypes[node.id.name],
+                state.componentTypesIsUnionMap[node.id.name],
+              ] = extractTypeProperties(node, state.componentTypes);
 
               state.referenceTypes[node.id.name] = node;
             },

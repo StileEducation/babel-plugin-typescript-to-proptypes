@@ -226,6 +226,7 @@ function convert(
               state,
               [],
               depth + 1,
+              false,
             ),
           ),
         ],
@@ -279,6 +280,7 @@ function convert(
             state,
             [],
             depth + 1,
+            false,
           ),
         ),
       ],
@@ -348,6 +350,7 @@ function convertListToProps(
   state: ConvertState,
   defaultProps: string[],
   depth: number,
+  typeIsUnion: boolean,
 ): t.ObjectProperty[] {
   const propTypesByName: { [name: string]: t.ObjectProperty[] } = {};
 
@@ -374,19 +377,20 @@ function convertListToProps(
           property.key,
           wrapIsRequired(
             propType,
-            property.optional ||
-              // Any PropTypes (eg. from imported types) can't be
-              // required, because they may be null or undefined.
-              isAnyPropType(propType) ||
-              // If the value can be null or undefined, then it can't be required
-              (t.isTSUnionType(type) &&
-                type.types.some(
-                  subType =>
-                    t.isTSAnyKeyword(subType) ||
-                    t.isTSNullKeyword(subType) ||
-                    t.isTSUndefinedKeyword(subType),
-                )) ||
-              defaultProps.includes((property.key as t.Identifier).name),
+            typeIsUnion || // Just don't require any properties if the root is a union type. TODO: require properties shared by all union members
+              (property.optional ||
+                // Any PropTypes (eg. from imported types) can't be
+                // required, because they may be null or undefined.
+                isAnyPropType(propType) ||
+                // If the value can be null or undefined, then it can't be required
+                (t.isTSUnionType(type) &&
+                  type.types.some(
+                    subType =>
+                      t.isTSAnyKeyword(subType) ||
+                      t.isTSNullKeyword(subType) ||
+                      t.isTSUndefinedKeyword(subType),
+                  )) ||
+                defaultProps.includes((property.key as t.Identifier).name)),
           ),
         ),
       );
@@ -432,7 +436,13 @@ export default function convertToPropTypes(
   typeNames.forEach(typeName => {
     if (types[typeName]) {
       properties.push(
-        ...convertListToProps(types[typeName], state, defaultProps, 0),
+        ...convertListToProps(
+          types[typeName],
+          state,
+          defaultProps,
+          0,
+          !!state.componentTypesIsUnionMap[typeName],
+        ),
       );
     }
 

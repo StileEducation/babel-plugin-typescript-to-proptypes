@@ -15,6 +15,7 @@ export type ConvertState = {
     namedImports: string[];
   };
   componentTypes: TypePropertyMap;
+  componentTypesIsUnionMap: { [key: string]: boolean };
   filePath: string;
   options: PluginOptions;
   propTypes: {

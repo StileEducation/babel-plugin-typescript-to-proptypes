@@ -4,7 +4,8 @@ import { TypePropertyMap } from "./types";
 export default function extractTypeProperties(
   node: any,
   types: TypePropertyMap,
-): t.TSPropertySignature[] {
+): [t.TSPropertySignature[], boolean] {
+  let isUnion = t.isTSUnionType(node);
   const properties: t.TSPropertySignature[] = [];
   const mapToPropertySignature = (data: any[]) => {
     data.forEach(prop => {
@@ -22,19 +23,34 @@ export default function extractTypeProperties(
 
     // Props
   } else if (t.isTSTypeReference(node)) {
-    properties.push(...extractTypeProperties(node.typeName, types));
+    const [recusionProperties, recusionIsUnion] = extractTypeProperties(
+      node.typeName,
+      types,
+    );
+    isUnion = isUnion || recusionIsUnion;
+    properties.push(...recusionProperties);
 
     // interface {}
   } else if (t.isTSInterfaceDeclaration(node)) {
     (node.extends || []).forEach(ext => {
-      properties.push(...extractTypeProperties(ext.expression, types));
+      const [recusionProperties, recusionIsUnion] = extractTypeProperties(
+        ext.expression,
+        types,
+      );
+      isUnion = isUnion || recusionIsUnion;
+      properties.push(...recusionProperties);
     });
 
     mapToPropertySignature(node.body.body);
 
     // type = {}
   } else if (t.isTSTypeAliasDeclaration(node)) {
-    properties.push(...extractTypeProperties(node.typeAnnotation, types));
+    const [recusionProperties, recusionIsUnion] = extractTypeProperties(
+      node.typeAnnotation,
+      types,
+    );
+    isUnion = isUnion || recusionIsUnion;
+    properties.push(...recusionProperties);
 
     // {}
   } else if (t.isTSTypeLiteral(node)) {
@@ -43,9 +59,14 @@ export default function extractTypeProperties(
     // Props & {}, Props | {}
   } else if (t.isTSIntersectionType(node) || t.isTSUnionType(node)) {
     node.types.forEach(intType => {
-      properties.push(...extractTypeProperties(intType, types));
+      const [recusionProperties, recusionIsUnion] = extractTypeProperties(
+        intType,
+        types,
+      );
+      isUnion = isUnion || recusionIsUnion;
+      properties.push(...recusionProperties);
     });
   }
 
-  return properties;
+  return [properties, isUnion];
 }
